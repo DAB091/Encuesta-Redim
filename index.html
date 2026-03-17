@@ -174,8 +174,8 @@
       <strong>Sin API Key.</strong> El dashboard lee tu hoja directamente mediante la URL pública de exportación CSV. No necesitás Google Cloud ni ninguna clave.<br><br>
       Solo asegurate de que en Netlify → <strong>Site configuration → Environment variables</strong> estén configuradas:
       <ol style="margin-top:6px;">
-        <li><strong>SHEET_ID</strong> → <code>1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88</code></li>
-        <li><strong>SHEET_GID</strong> → <code>0</code> (es el número al final de la URL de tu hoja)</li>
+        <li><strong>SHEET_ID</strong> → el ID de tu hoja de Google Sheets</li>
+        <li><strong>SHEET_GID</strong> → el número de pestaña (normalmente <code>0</code>)</li>
       </ol>
       Después hacé redeploy y clic en <strong>Activar tiempo real</strong>.
     </div>
@@ -508,7 +508,7 @@ async function connectSheets() {
   } else {
     statusEl.textContent = '✗ Sin conexión. Verificá que la hoja sea pública y que hayas hecho redeploy en Netlify.';
     statusEl.className = 'api-status err';
-    setBanner('No se pudo conectar. Asegurate de que la hoja esté publicada públicamente y que las variables SHEET_ID y SHEET_GID estén en Netlify.', 'err');
+    setBanner('No se pudo conectar. Verificá que las variables de entorno estén configuradas en Netlify y que hayas hecho redeploy.', 'err');
   }
 }
 
