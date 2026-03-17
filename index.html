@@ -8,23 +8,19 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --red:    #E53935; --red-l:    #EF9A9A; --red-d:    #B71C1C;
-      --orange: #FB8C00; --orange-l: #FFCC80; --orange-d: #E65100;
-      --yellow: #FDD835; --yellow-l: #FFF9C4; --yellow-d: #F57F17;
-      --green:  #43A047; --green-l:  #A5D6A7; --green-d:  #1B5E20;
-      --teal:   #00897B; --teal-l:   #80CBC4; --teal-d:   #004D40;
-      --blue:   #1E88E5; --blue-l:   #90CAF9; --blue-d:   #0D47A1;
-      --indigo: #3949AB; --indigo-l: #9FA8DA; --indigo-d: #1A237E;
-      --purple: #8E24AA; --purple-l: #CE93D8; --purple-d: #4A148C;
-      --pink:   #D81B60; --pink-l:   #F48FB1; --pink-d:   #880E4F;
-      --bg: #f8f9fc; --card: #ffffff; --text: #1a1a2e; --muted: #6b7280;
-      --border: rgba(0,0,0,0.08);
+      --orange:  #FF6B35; --orange-l: #FFB347; --orange-d: #E64A00;
+      --pink:    #E91E8C; --pink-l:   #F48FB1; --pink-d:   #AD005E;
+      --violet:  #7B2D8B; --violet-l: #CE93D8; --violet-d: #4A0060;
+      --rose:    #F06292; --rose-l:   #FCE4EC; --rose-d:   #C2185B;
+      --amber:   #FFB347; --amber-l:  #FFE0B2; --amber-d:  #E65100;
+      --bg: #fdf8ff; --card: #ffffff; --text: #1a0a2e; --muted: #8a7298;
+      --border: rgba(123,45,139,0.1);
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
 
     /* HEADER */
     .header {
-      background: linear-gradient(135deg, #1a237e 0%, #1565c0 40%, #0277bd 70%, #00838f 100%);
+      background: linear-gradient(135deg, #4A0060 0%, #7B2D8B 30%, #E91E8C 65%, #FF6B35 100%);
       padding: 24px 36px; display: flex; align-items: center; gap: 20px;
       position: relative; overflow: hidden;
     }
@@ -51,28 +47,28 @@
 
     /* STATUSBAR */
     .statusbar { padding:9px 36px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--muted); }
-    .statusbar strong { color:var(--blue); }
+    .statusbar strong { color:var(--violet); }
 
     /* STATUS BANNER */
     .banner { margin:14px 36px 0; padding:12px 16px; border-radius:10px; font-size:13px; display:none; }
     .banner.ok  { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
     .banner.err { background:#ffebee; color:#c62828; border:1px solid #ef9a9a; }
-    .banner.info{ background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; display:block; }
+    .banner.info{ background:#fdf0ff; color:#7B2D8B; border:1px solid #CE93D8; display:block; }
 
     /* API PANEL */
     .api-panel { margin:14px 36px 0; background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-    .api-panel-header { padding:12px 18px; background:linear-gradient(90deg,#e8eaf6,#e3f2fd); display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
-    .api-panel-header span { font-size:13px; font-weight:500; color:var(--indigo); }
+    .api-panel-header { padding:12px 18px; background:linear-gradient(90deg,#fdf0ff,#fff0f8); display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+    .api-panel-header span { font-size:13px; font-weight:500; color:var(--violet); }
     .arrow { font-size:11px; color:var(--muted); transition:transform .2s; }
     .api-panel-header.open .arrow { transform:rotate(180deg); }
     .api-body { display:none; padding:18px; border-top:1px solid var(--border); }
     .api-body.visible { display:block; }
     .api-hint { font-size:12px; color:var(--muted); line-height:1.7; background:#f8f9fc; border-radius:8px; padding:12px 14px; border:1px dashed var(--border); margin-bottom:14px; }
-    .api-hint a { color:var(--blue); }
+    .api-hint a { color:var(--violet); }
     .api-hint ol { margin-left:16px; }
     .api-hint strong { color:var(--text); }
     .api-actions { margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .btn-connect { background:linear-gradient(135deg,var(--indigo),var(--blue)); color:#fff; border:none; border-radius:8px; padding:9px 22px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:opacity .2s; }
+    .btn-connect { background:linear-gradient(135deg,var(--violet),var(--pink)); color:#fff; border:none; border-radius:8px; padding:9px 22px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:opacity .2s; }
     .btn-connect:hover { opacity:.9; }
     .api-status { font-size:12px; color:var(--muted); }
     .api-status.ok  { color:#2e7d32; }
@@ -82,10 +78,10 @@
     .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:18px 36px 0; }
     .mcard { background:var(--card); border-radius:14px; border:1px solid var(--border); padding:16px 18px; position:relative; overflow:hidden; }
     .mcard::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
-    .mcard.blue::before   { background:linear-gradient(90deg,var(--blue-d),var(--blue-l)); }
-    .mcard.green::before  { background:linear-gradient(90deg,var(--green-d),var(--green-l)); }
-    .mcard.red::before    { background:linear-gradient(90deg,var(--red-d),var(--red-l)); }
-    .mcard.orange::before { background:linear-gradient(90deg,var(--orange-d),var(--orange-l)); }
+    .mcard.blue::before   { background:linear-gradient(90deg,var(--violet-d),var(--violet-l)); }
+    .mcard.green::before  { background:linear-gradient(90deg,var(--pink-d),var(--pink-l)); }
+    .mcard.red::before    { background:linear-gradient(90deg,var(--orange-d),var(--orange-l)); }
+    .mcard.orange::before { background:linear-gradient(90deg,var(--rose-d),var(--rose-l)); }
     .mlabel { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
     .mvalue { font-size:28px; font-weight:600; color:var(--text); line-height:1; }
     .msub   { font-size:11px; color:var(--muted); margin-top:4px; }
@@ -114,10 +110,10 @@
     .obs-table td { padding:9px 10px; border-bottom:1px solid rgba(0,0,0,0.04); vertical-align:middle; }
     .obs-table tr:last-child td { border-bottom:none; }
     .tag { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:500; }
-    .t-nunca     { background:#e3f2fd; color:#1565c0; }
-    .t-aveces    { background:#fff8e1; color:#e65100; }
-    .t-frecuente { background:#fce4ec; color:#880e4f; }
-    .t-siempre   { background:#e8f5e9; color:#1b5e20; }
+    .t-nunca     { background:#ffecec; color:#cc0000; }
+    .t-aveces    { background:#e8f0ff; color:#0055cc; }
+    .t-frecuente { background:#fff3e0; color:#cc5500; }
+    .t-siempre   { background:#e8f5e8; color:#006600; }
     .bar-stack { display:flex; height:8px; border-radius:4px; overflow:hidden; gap:2px; }
     .bar-seg   { height:100%; border-radius:2px; min-width:3px; }
 
@@ -143,10 +139,9 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="logo-zone" id="logoZone" onclick="document.getElementById('logoInput').click()">
-    <span>+ Logo PNG</span>
+  <div class="logo-zone">
+    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
   </div>
-  <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml" style="display:none">
   <div class="header-text">
     <h1>Encuesta a docentes</h1>
     <p>Convivencia, género y herramientas institucionales · 2026</p>
@@ -220,7 +215,7 @@
 </div>
 
 <!-- SECCIÓN 1 -->
-<div class="section-title"><span class="bar" style="background:var(--red)"></span>Convivencia y exclusión</div>
+<div class="section-title"><span class="bar" style="background:var(--orange)"></span>Convivencia y exclusión</div>
 <div class="grid-2">
   <div class="ccard">
     <div class="ctitle">¿Observás conductas de exclusión deliberada?</div>
@@ -251,7 +246,7 @@
 </div>
 
 <!-- SECCIÓN 2 -->
-<div class="section-title"><span class="bar" style="background:var(--blue)"></span>Perspectiva de género</div>
+<div class="section-title"><span class="bar" style="background:var(--pink)"></span>Perspectiva de género</div>
 <div class="grid-2">
   <div class="ccard">
     <div class="ctitle">¿Existen juegos "de nenas" y "de nenes"?</div>
@@ -268,7 +263,7 @@
 </div>
 
 <!-- SECCIÓN 3 -->
-<div class="section-title"><span class="bar" style="background:var(--teal)"></span>Observaciones en sala</div>
+<div class="section-title"><span class="bar" style="background:var(--violet)"></span>Observaciones en sala</div>
 <div class="grid-1">
   <div class="ccard">
     <div class="ctitle">Indicadores observados en el aula</div>
@@ -280,7 +275,7 @@
 </div>
 
 <!-- SECCIÓN 4 -->
-<div class="section-title"><span class="bar" style="background:var(--green)"></span>Capacitación y herramientas</div>
+<div class="section-title"><span class="bar" style="background:var(--amber)"></span>Capacitación y herramientas</div>
 <div class="grid-3">
   <div class="ccard">
     <div class="ctitle">¿Te sentís capacitado/a para detectar abuso?</div>
@@ -303,7 +298,7 @@
 </div>
 
 <!-- SECCIÓN 5 -->
-<div class="section-title"><span class="bar" style="background:var(--purple)"></span>Prácticas docentes</div>
+<div class="section-title"><span class="bar" style="background:var(--rose)"></span>Prácticas docentes</div>
 <div class="grid-2" style="padding-bottom:20px">
   <div class="ccard">
     <div class="ctitle">El docente utiliza lenguaje inclusivo o neutro</div>
@@ -323,25 +318,26 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ── RGB COLOR PALETTES (clearly distinct per section) ─────────────────────
+// ── RGB PALETTES · Orange / Pink / Violet theme ───────────────────────────
+// Donut charts use pure saturated RGB to maximise contrast between slices
 const PAL = {
-  // Sección 1 - Convivencia: RED / ORANGE / YELLOW / AMBER
-  exclusion:  ['#E53935','#FB8C00','#FDD835','#43A047'],
-  burlas:     ['#E53935','#FB8C00','#FDD835','#43A047'],
-  temor:      ['#FB8C00','#E53935','#FDD835','#43A047'],
-  agresiones: ['#FB8C00','#FDD835','#E53935','#43A047'],
-  // Sección 2 - Género: BLUE / INDIGO / TEAL
-  juegos:     ['#1E88E5','#3949AB','#00897B','#0288D1'],
-  conflicto:  ['#1E88E5','#E53935'],
-  // Sección 4 - Capacitación: GREEN / TEAL / BLUE
-  cap:        ['#43A047','#00897B'],
-  proto:      ['#1E88E5','#FB8C00'],
-  ong:        ['#8E24AA','#D81B60','#3949AB','#00897B'],
-  // Sección 5 - Prácticas: PURPLE / PINK / INDIGO
-  lenguaje:   ['#E53935','#FB8C00','#43A047'],
-  desafio:    ['#E53935','#FB8C00','#3949AB'],
-  // Tabla observaciones
-  obs: { 'Siempre':'#43A047','Frecuentemente':'#FB8C00','A veces':'#1E88E5','Nunca':'#E53935' },
+  // Frecuencia: rojo puro · naranja puro · azul puro · verde puro  (máximo contraste RGB)
+  exclusion:  ['#FF0000','#0000FF','#00CC00','#FF8800'],
+  burlas:     ['#FF0000','#0000FF','#00CC00','#FF8800'],
+  temor:      ['#FF8800','#FF0000','#0000FF','#00CC00'],
+  agresiones: ['#FF8800','#FF0000','#0000FF','#00CC00'],
+  // Género: verde · rojo · azul (3 opciones bien separadas)
+  juegos:     ['#E91E8C','#FF6B35','#7B2D8B','#F06292'],
+  conflicto:  ['#00BB00','#FF0000'],
+  // Capacitación
+  cap:        ['#FF6600','#7B2D8B'],
+  proto:      ['#00AA00','#FF8800'],
+  ong:        ['#E91E8C','#FF6B35','#7B2D8B','#F06292'],
+  // Prácticas
+  lenguaje:   ['#FF0000','#FF8800','#00BB00'],
+  desafio:    ['#E91E8C','#FF6B35','#7B2D8B'],
+  // Tabla: colores semánticos puros
+  obs: { 'Siempre':'#00AA00','Frecuentemente':'#FF6600','A veces':'#0066FF','Nunca':'#CC0000' },
 };
 
 const FREQ_ORDER = ['Siempre','Frecuentemente','A veces','Nunca'];
@@ -379,13 +375,6 @@ let charts = {};
 let liveInterval = null;
 
 // ── LOGO UPLOAD ────────────────────────────────────────────────────────────
-document.getElementById('logoInput').addEventListener('change', e => {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => { document.getElementById('logoZone').innerHTML = `<img src="${ev.target.result}" alt="logo">`; };
-  r.readAsDataURL(f);
-});
-
 function toggleApiPanel() {
   const body   = document.getElementById('apiBody');
   const arrow  = document.getElementById('apiArrow');
