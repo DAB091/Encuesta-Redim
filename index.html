@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Encuesta</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --c1: #FF6B35; --c2: #FF8C69; --c3: #FFB347;
+      --cp1: #E91E8C; --cp2: #F06292; --cp3: #F48FB1;
+      --cv1: #7B2D8B; --cv2: #AB47BC; --cv3: #CE93D8;
+      --bg: #fdf8ff; --card: #ffffff; --text: #1a0a2e; --muted: #7a6890;
+      --border: rgba(123,45,139,0.12);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .header {
+      background: linear-gradient(135deg, #7B2D8B 0%, #E91E8C 50%, #FF6B35 100%);
+      padding: 28px 32px 24px;
+      display: flex; align-items: center; gap: 20px;
+      position: relative; overflow: hidden;
+    }
+    .header::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+    }
+    .header::after {
+      content: ''; position: absolute; bottom: -60px; right: 120px;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .logo-zone {
+      width: 64px; height: 64px; border-radius: 14px;
+      background: rgba(255,255,255,0.18);
+      border: 1.5px dashed rgba(255,255,255,0.5);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; overflow: hidden;
+      transition: background 0.2s; position: relative; z-index: 1;
+    }
+    .logo-zone:hover { background: rgba(255,255,255,0.28); }
+    .logo-zone img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+    .logo-zone span { font-size: 11px; color: rgba(255,255,255,0.75); text-align: center; line-height: 1.3; padding: 4px; }
+    .header-text { flex: 1; position: relative; z-index: 1; }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; font-weight: 600; line-height: 1.2; }
+    .header-text p { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; position: relative; z-index: 1; }
+    .header-badge {
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; color: #fff; display: flex; align-items: center; gap: 6px;
+    }
+    .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #7fff6e; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .status-bar {
+      padding: 10px 32px; background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted);
+    }
+    .status-bar span { color: var(--cv1); font-weight: 500; }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 32px 0; }
+    .metric-card {
+      background: var(--card); border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      position: relative; overflow: hidden;
+    }
+    .metric-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .mc-orange::before { background: linear-gradient(90deg, var(--c1), var(--c3)); }
+    .mc-pink::before { background: linear-gradient(90deg, var(--cp1), var(--cp3)); }
+    .mc-violet::before { background: linear-gradient(90deg, var(--cv1), var(--cv3)); }
+    .mc-mixed::before { background: linear-gradient(90deg, var(--c1), var(--cp1), var(--cv1)); }
+    .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+    .metric-value { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+    .metric-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 32px 20px; }
+    .chart-card {
+      background: var(--card); border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 20px;
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .chart-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+    .chart-wrap { position: relative; width: 100%; }
+
+    .setup-box {
+      background: #fff8fe; border: 1.5px dashed #CE93D8;
+      border-radius: 12px; padding: 20px; margin: 16px 32px 0;
+      font-size: 13px; color: var(--cv1); line-height: 1.6;
+    }
+    .setup-box strong { color: var(--cv1); }
+    .setup-box ol { margin: 8px 0 0 18px; }
+
+    .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+    .refresh-btn {
+      background: rgba(255,255,255,0.18); color: #fff;
+      border: 1px solid rgba(255,255,255,0.35); border-radius: 8px;
+      padding: 8px 16px; font-size: 12px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover { background: rgba(255,255,255,0.28); }
+
+    footer { padding: 16px 32px; font-size: 11px; color: var(--muted); text-align: right; border-top: 1px solid var(--border); margin-top: 8px; }
+
+    @media (max-width: 768px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+      .chart-card.full { grid-column: 1; }
+      .header { padding: 20px 16px; flex-wrap: wrap; }
+      .metrics { padding: 16px; }
+      .charts-grid { padding: 0 16px 16px; }
+      .setup-box { margin: 16px 16px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" title="Subir logo PNG">
+    <span>+ Logo PNG</span>
+  </div>
+  <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml" style="display:none">
+  <div class="header-text">
+    <h1 id="dashTitle">Dashboard de encuesta</h1>
+    <p id="dashSubtitle">Resultados en tiempo real · Google Forms</p>
+  </div>
+  <div class="header-right">
+    <div class="header-badge"><span class="dot-live"></span>En vivo</div>
+    <button class="refresh-btn" onclick="loadData()">↻ Actualizar</button>
+  </div>
+</div>
+
+<div class="status-bar">
+  Última actualización: <span id="lastUpdate">—</span> &nbsp;·&nbsp; Fuente: Google Sheets
+</div>
+
+<div class="setup-box" id="setupBox" style="display:none;">
+  <strong>Paso pendiente para datos en tiempo real:</strong>
+  <ol>
+    <li>En Google Sheets: <strong>Archivo → Compartir → Publicar en la web</strong></li>
+    <li>Elegí tu hoja y formato <strong>CSV</strong>, luego hacé clic en <strong>Publicar</strong></li>
+    <li>El dashboard se actualizará automáticamente cada 60 segundos</li>
+  </ol>
+  <p style="margin-top:8px;">Mientras tanto se muestran datos de muestra.</p>
+</div>
+
+<div class="metrics">
+  <div class="metric-card mc-orange">
+    <div class="metric-label">Total respuestas</div>
+    <div class="metric-value" id="totalResp">—</div>
+    <div class="metric-sub" id="lastResp">Cargando...</div>
+  </div>
+  <div class="metric-card mc-pink">
+    <div class="metric-label">Preguntas</div>
+    <div class="metric-value" id="totalQ">—</div>
+    <div class="metric-sub">Campos en la encuesta</div>
+  </div>
+  <div class="metric-card mc-violet">
+    <div class="metric-label">Respuesta más común</div>
+    <div class="metric-value" style="font-size:16px;margin-top:4px;" id="topAnswer">—</div>
+    <div class="metric-sub" id="topAnswerQ">—</div>
+  </div>
+  <div class="metric-card mc-mixed">
+    <div class="metric-label">Completadas hoy</div>
+    <div class="metric-value" id="todayResp">—</div>
+    <div class="metric-sub" id="todaySub">—</div>
+  </div>
+</div>
+
+<div class="charts-grid" id="chartsContainer">
+  <div class="chart-card full" style="text-align:center;padding:40px;color:var(--muted);">Conectando con Google Sheets...</div>
+</div>
+
+<footer>Dashboard generado con Claude · ID de hoja: 1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+  const SHEET_ID = '1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88';
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+  const COLORS_ORANGE = ['#FF6B35','#FF8C69','#FFB347','#FFCF8A','#FFE5C2'];
+  const COLORS_PINK   = ['#E91E8C','#F06292','#F48FB1','#F8BBD9','#FCE4EC'];
+  const COLORS_VIOLET = ['#7B2D8B','#AB47BC','#CE93D8','#E1BEE7','#F3E5F5'];
+
+  let chartInstances = [];
+
+  document.getElementById('logoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const zone = document.getElementById('logoZone');
+      zone.innerHTML = `<img src="${ev.target.result}" alt="logo">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function now() {
+    return new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  }
+
+  function isDateCol(col) {
+    return col.toLowerCase().includes('marca') || col.toLowerCase().includes('timestamp') || col.toLowerCase().includes('fecha');
+  }
+
+  function getFreq(arr) {
+    const freq = {};
+    arr.forEach(v => { if (v && v.trim()) freq[v.trim()] = (freq[v.trim()] || 0) + 1; });
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  }
+
+  function destroyCharts() {
+    chartInstances.forEach(c => c.destroy());
+    chartInstances = [];
+  }
+
+  function buildCharts(headers, rows) {
+    destroyCharts();
+    const container = document.getElementById('chartsContainer');
+    container.innerHTML = '';
+    const dataColumns = headers.filter(h => !isDateCol(h));
+
+    dataColumns.forEach((col, idx) => {
+      const vals = rows.map(r => r[col]).filter(v => v && v.trim());
+      if (!vals.length) return;
+
+      const freq = getFreq(vals);
+      const isNumeric = vals.every(v => !isNaN(parseFloat(v)));
+      const card = document.createElement('div');
+      card.className = 'chart-card';
+      if (dataColumns.length === 1) card.className += ' full';
+
+      const cid = 'chart_' + idx;
+      const palette = idx % 3 === 0 ? COLORS_ORANGE : idx % 3 === 1 ? COLORS_PINK : COLORS_VIOLET;
+
+      if (isNumeric && freq.length > 8) {
+        const nums = vals.map(v => parseFloat(v));
+        const avg = (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(1);
+        const mn = Math.min(...nums);
+        const mx = Math.max(...nums);
+        card.innerHTML = `
+          <div class="chart-title">${col}</div>
+          <div class="chart-sub">Promedio: ${avg} · Mín: ${mn} · Máx: ${mx}</div>
+          <div class="chart-wrap" style="height:220px"><canvas id="${cid}"></canvas></div>`;
+        container.appendChild(card);
+        setTimeout(() => {
+          const buckets = 8;
+          const step = (mx - mn) / buckets || 1;
+          const labels = [];
+          const counts = new Array(buckets).fill(0);
+          for (let i = 0; i < buckets; i++) labels.push((mn + i * step).toFixed(1));
+          nums.forEach(n => {
+            let b = Math.floor((n - mn) / step);
+            if (b >= buckets) b = buckets - 1;
+            counts[b]++;
+          });
+          chartInstances.push(new Chart(document.getElementById(cid), {
+            type: 'bar',
+            data: { labels, datasets: [{ data: counts, backgroundColor: palette[0], borderRadius: 6, borderSkipped: false }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(0,0,0,0.04)' } } } }
+          }));
+        }, 100);
+      } else {
+        const top = freq.slice(0, 8);
+        const labels = top.map(e => e[0].length > 30 ? e[0].slice(0, 28) + '…' : e[0]);
+        const data = top.map(e => e[1]);
+        const total = data.reduce((a, b) => a + b, 0);
+        const isPie = top.length <= 5;
+        const legendHtml = top.map((e, i) => `
+          <span style="display:flex;align-items:center;gap:4px;">
+            <span class="legend-dot" style="background:${palette[i % palette.length]}"></span>
+            ${e[0].length > 20 ? e[0].slice(0, 18) + '…' : e[0]} (${Math.round(e[1] / total * 100)}%)
+          </span>`).join('');
+        card.innerHTML = `
+          <div class="chart-title">${col}</div>
+          <div class="legend-row">${legendHtml}</div>
+          <div class="chart-wrap" style="height:${isPie ? 200 : Math.max(180, top.length * 38)}px"><canvas id="${cid}"></canvas></div>`;
+        container.appendChild(card);
+        setTimeout(() => {
+          const type = isPie ? 'doughnut' : 'bar';
+          const opts = isPie ? {
+            responsive: true, maintainAspectRatio: false, cutout: '60%',
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw / total * 100)}%)` } } }
+          } : {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1 } }, y: { grid: { display: false } } }
+          };
+          const dsConfig = isPie
+            ? { data, backgroundColor: palette.slice(0, data.length), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }
+            : { data, backgroundColor: palette[0], borderRadius: 6, borderSkipped: false, hoverBackgroundColor: palette[1] };
+          chartInstances.push(new Chart(document.getElementById(cid), { type, data: { labels, datasets: [dsConfig] }, options: opts }));
+        }, 100);
+      }
+    });
+
+    const dateCol = headers.find(h => isDateCol(h));
+    if (dateCol && rows.length > 2) {
+      const byDay = {};
+      rows.forEach(r => {
+        const raw = r[dateCol];
+        if (!raw) return;
+        const d = new Date(raw);
+        if (isNaN(d)) return;
+        const key = d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
+        byDay[key] = (byDay[key] || 0) + 1;
+      });
+      const entries = Object.entries(byDay).slice(-14);
+      if (entries.length > 1) {
+        const tcard = document.createElement('div');
+        tcard.className = 'chart-card full';
+        tcard.innerHTML = `
+          <div class="chart-title">Respuestas por día</div>
+          <div class="chart-sub">Últimas ${entries.length} fechas registradas</div>
+          <div class="chart-wrap" style="height:180px"><canvas id="chart_timeline"></canvas></div>`;
+        container.appendChild(tcard);
+        setTimeout(() => {
+          chartInstances.push(new Chart(document.getElementById('chart_timeline'), {
+            type: 'line',
+            data: {
+              labels: entries.map(e => e[0]),
+              datasets: [{ data: entries.map(e => e[1]), borderColor: '#E91E8C', backgroundColor: 'rgba(233,30,140,0.08)', tension: 0.4, fill: true, pointBackgroundColor: '#E91E8C', pointRadius: 4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1 } } } }
+          }));
+        }, 150);
+      }
+    }
+  }
+
+  function updateMetrics(headers, rows) {
+    document.getElementById('totalResp').textContent = rows.length;
+    document.getElementById('totalQ').textContent = headers.filter(h => !isDateCol(h)).length;
+    const dateCol = headers.find(h => isDateCol(h));
+    if (dateCol && rows.length) {
+      const last = rows[rows.length - 1][dateCol];
+      document.getElementById('lastResp').textContent = last ? 'Última: ' + new Date(last).toLocaleDateString('es-AR') : '—';
+      const today = new Date().toDateString();
+      const todayCount = rows.filter(r => new Date(r[dateCol]).toDateString() === today).length;
+      document.getElementById('todayResp').textContent = todayCount;
+      document.getElementById('todaySub').textContent = todayCount > 0 ? 'nuevas hoy' : 'sin respuestas hoy';
+    } else {
+      document.getElementById('lastResp').textContent = '—';
+      document.getElementById('todayResp').textContent = '—';
+      document.getElementById('todaySub').textContent = '—';
+    }
+    const dataCols = headers.filter(h => !isDateCol(h));
+    if (dataCols.length) {
+      let best = null, bestCount = 0, bestCol = '';
+      dataCols.forEach(col => {
+        const freq = getFreq(rows.map(r => r[col]));
+        if (freq.length && freq[0][1] > bestCount) { bestCount = freq[0][1]; best = freq[0][0]; bestCol = col; }
+      });
+      if (best) {
+        document.getElementById('topAnswer').textContent = best.length > 18 ? best.slice(0, 16) + '…' : best;
+        document.getElementById('topAnswerQ').textContent = bestCol.length > 30 ? bestCol.slice(0, 28) + '…' : bestCol;
+      }
+    }
+  }
+
+  function showSampleData() {
+    document.getElementById('setupBox').style.display = 'block';
+    const headers = ['Marca temporal', '¿Cuál es tu edad?', '¿Cómo conociste el producto?', '¿Lo recomendarías?', '¿Con qué frecuencia lo usás?'];
+    const sources = ['Redes sociales', 'Amigos', 'Google', 'Publicidad', 'Otro'];
+    const reco = ['Sí, definitivamente', 'Probablemente sí', 'Tal vez', 'Probablemente no'];
+    const freq = ['Todos los días', 'Varias veces por semana', 'Una vez por semana', 'Ocasionalmente'];
+    const rows = Array.from({ length: 24 }, (_, i) => {
+      const d = new Date(); d.setDate(d.getDate() - Math.floor(Math.random() * 14));
+      return {
+        'Marca temporal': d.toISOString(),
+        '¿Cuál es tu edad?': String(18 + Math.floor(Math.random() * 40)),
+        '¿Cómo conociste el producto?': sources[Math.floor(Math.random() * sources.length)],
+        '¿Lo recomendarías?': reco[Math.floor(Math.random() * reco.length)],
+        '¿Con qué frecuencia lo usás?': freq[Math.floor(Math.random() * freq.length)]
+      };
+    });
+    document.getElementById('dashSubtitle').textContent = 'Datos de muestra · Publicá la hoja para datos reales';
+    updateMetrics(headers, rows);
+    buildCharts(headers, rows);
+    document.getElementById('lastUpdate').textContent = now() + ' (muestra)';
+  }
+
+  async function loadData() {
+    document.getElementById('lastUpdate').textContent = 'actualizando…';
+    try {
+      const resp = await fetch(CSV_URL);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+      if (!parsed.data || parsed.data.length === 0) throw new Error('Sin datos');
+      document.getElementById('setupBox').style.display = 'none';
+      document.getElementById('dashSubtitle').textContent = 'Resultados en tiempo real · Google Sheets';
+      updateMetrics(parsed.meta.fields, parsed.data);
+      buildCharts(parsed.meta.fields, parsed.data);
+      document.getElementById('lastUpdate').textContent = now();
+    } catch (e) {
+      showSampleData();
+    }
+  }
+
+  loadData();
+  setInterval(loadData, 60000);
+</script>
+</body>
+</html>
