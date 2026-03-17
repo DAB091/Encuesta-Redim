@@ -3,416 +3,615 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard de Encuesta</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <title>Dashboard · Encuesta a Docentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --c1: #FF6B35; --c2: #FF8C69; --c3: #FFB347;
-      --cp1: #E91E8C; --cp2: #F06292; --cp3: #F48FB1;
-      --cv1: #7B2D8B; --cv2: #AB47BC; --cv3: #CE93D8;
-      --bg: #fdf8ff; --card: #ffffff; --text: #1a0a2e; --muted: #7a6890;
-      --border: rgba(123,45,139,0.12);
+      --red:    #E53935; --red-l:    #EF9A9A; --red-d:    #B71C1C;
+      --orange: #FB8C00; --orange-l: #FFCC80; --orange-d: #E65100;
+      --yellow: #FDD835; --yellow-l: #FFF9C4; --yellow-d: #F57F17;
+      --green:  #43A047; --green-l:  #A5D6A7; --green-d:  #1B5E20;
+      --teal:   #00897B; --teal-l:   #80CBC4; --teal-d:   #004D40;
+      --blue:   #1E88E5; --blue-l:   #90CAF9; --blue-d:   #0D47A1;
+      --indigo: #3949AB; --indigo-l: #9FA8DA; --indigo-d: #1A237E;
+      --purple: #8E24AA; --purple-l: #CE93D8; --purple-d: #4A148C;
+      --pink:   #D81B60; --pink-l:   #F48FB1; --pink-d:   #880E4F;
+      --bg: #f8f9fc; --card: #ffffff; --text: #1a1a2e; --muted: #6b7280;
+      --border: rgba(0,0,0,0.08);
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
 
+    /* HEADER */
     .header {
-      background: linear-gradient(135deg, #7B2D8B 0%, #E91E8C 50%, #FF6B35 100%);
-      padding: 28px 32px 24px;
-      display: flex; align-items: center; gap: 20px;
+      background: linear-gradient(135deg, #1a237e 0%, #1565c0 40%, #0277bd 70%, #00838f 100%);
+      padding: 24px 36px; display: flex; align-items: center; gap: 20px;
       position: relative; overflow: hidden;
     }
-    .header::before {
-      content: ''; position: absolute; top: -40px; right: -40px;
-      width: 180px; height: 180px; border-radius: 50%;
-      background: rgba(255,255,255,0.07);
-    }
-    .header::after {
-      content: ''; position: absolute; bottom: -60px; right: 120px;
-      width: 140px; height: 140px; border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-    }
+    .header::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.05); }
+    .header::after  { content:''; position:absolute; bottom:-80px; right:180px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.04); }
     .logo-zone {
-      width: 64px; height: 64px; border-radius: 14px;
-      background: rgba(255,255,255,0.18);
-      border: 1.5px dashed rgba(255,255,255,0.5);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0; overflow: hidden;
-      transition: background 0.2s; position: relative; z-index: 1;
+      width:68px; height:68px; border-radius:16px;
+      background:rgba(255,255,255,0.15); border:1.5px dashed rgba(255,255,255,0.45);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; flex-shrink:0; overflow:hidden; transition:background .2s; z-index:1;
     }
-    .logo-zone:hover { background: rgba(255,255,255,0.28); }
-    .logo-zone img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
-    .logo-zone span { font-size: 11px; color: rgba(255,255,255,0.75); text-align: center; line-height: 1.3; padding: 4px; }
-    .header-text { flex: 1; position: relative; z-index: 1; }
-    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; font-weight: 600; line-height: 1.2; }
-    .header-text p { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; }
-    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; position: relative; z-index: 1; }
-    .header-badge {
-      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 20px; padding: 6px 14px;
-      font-size: 12px; color: #fff; display: flex; align-items: center; gap: 6px;
+    .logo-zone:hover { background:rgba(255,255,255,0.25); }
+    .logo-zone img   { width:100%; height:100%; object-fit:contain; border-radius:14px; }
+    .logo-zone span  { font-size:11px; color:rgba(255,255,255,0.7); text-align:center; line-height:1.4; padding:6px; }
+    .header-text    { flex:1; z-index:1; }
+    .header-text h1 { font-family:'Playfair Display',serif; font-size:24px; color:#fff; font-weight:700; line-height:1.2; }
+    .header-text p  { font-size:13px; color:rgba(255,255,255,0.72); margin-top:5px; }
+    .header-right   { display:flex; flex-direction:column; align-items:flex-end; gap:8px; z-index:1; }
+    .badge-live { background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:6px 14px; font-size:12px; color:#fff; display:flex; align-items:center; gap:6px; }
+    .dot { width:7px; height:7px; border-radius:50%; background:#69f0ae; animation:blink 1.5s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .btn-refresh { background:rgba(255,255,255,0.16); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; padding:7px 16px; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:background .2s; }
+    .btn-refresh:hover { background:rgba(255,255,255,0.26); }
+
+    /* STATUSBAR */
+    .statusbar { padding:9px 36px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--muted); }
+    .statusbar strong { color:var(--blue); }
+
+    /* STATUS BANNER */
+    .banner { margin:14px 36px 0; padding:12px 16px; border-radius:10px; font-size:13px; display:none; }
+    .banner.ok  { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
+    .banner.err { background:#ffebee; color:#c62828; border:1px solid #ef9a9a; }
+    .banner.info{ background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; display:block; }
+
+    /* API PANEL */
+    .api-panel { margin:14px 36px 0; background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .api-panel-header { padding:12px 18px; background:linear-gradient(90deg,#e8eaf6,#e3f2fd); display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+    .api-panel-header span { font-size:13px; font-weight:500; color:var(--indigo); }
+    .arrow { font-size:11px; color:var(--muted); transition:transform .2s; }
+    .api-panel-header.open .arrow { transform:rotate(180deg); }
+    .api-body { display:none; padding:18px; border-top:1px solid var(--border); }
+    .api-body.visible { display:block; }
+    .api-hint { font-size:12px; color:var(--muted); line-height:1.7; background:#f8f9fc; border-radius:8px; padding:12px 14px; border:1px dashed var(--border); margin-bottom:14px; }
+    .api-hint a { color:var(--blue); }
+    .api-hint ol { margin-left:16px; }
+    .api-hint strong { color:var(--text); }
+    .api-actions { margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .btn-connect { background:linear-gradient(135deg,var(--indigo),var(--blue)); color:#fff; border:none; border-radius:8px; padding:9px 22px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:opacity .2s; }
+    .btn-connect:hover { opacity:.9; }
+    .api-status { font-size:12px; color:var(--muted); }
+    .api-status.ok  { color:#2e7d32; }
+    .api-status.err { color:#c62828; }
+
+    /* METRICS */
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:18px 36px 0; }
+    .mcard { background:var(--card); border-radius:14px; border:1px solid var(--border); padding:16px 18px; position:relative; overflow:hidden; }
+    .mcard::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
+    .mcard.blue::before   { background:linear-gradient(90deg,var(--blue-d),var(--blue-l)); }
+    .mcard.green::before  { background:linear-gradient(90deg,var(--green-d),var(--green-l)); }
+    .mcard.red::before    { background:linear-gradient(90deg,var(--red-d),var(--red-l)); }
+    .mcard.orange::before { background:linear-gradient(90deg,var(--orange-d),var(--orange-l)); }
+    .mlabel { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+    .mvalue { font-size:28px; font-weight:600; color:var(--text); line-height:1; }
+    .msub   { font-size:11px; color:var(--muted); margin-top:4px; }
+
+    /* SECTION TITLES */
+    .section-title { padding:20px 36px 4px; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:10px; }
+    .section-title .bar { width:4px; height:14px; border-radius:2px; flex-shrink:0; }
+    .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* CHARTS */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:8px 36px; }
+    .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; padding:8px 36px; }
+    .grid-1 { padding:8px 36px; }
+    .ccard  { background:var(--card); border-radius:14px; border:1px solid var(--border); padding:18px 20px; }
+    .ctitle { font-size:13px; font-weight:500; color:var(--text); margin-bottom:3px; }
+    .csub   { font-size:11px; color:var(--muted); margin-bottom:12px; }
+    .cwrap  { position:relative; width:100%; }
+    .legend-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+    .leg    { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
+    .leg-sq { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+    /* OBSERVATION TABLE */
+    .obs-wrap { overflow-x:auto; }
+    .obs-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .obs-table th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); }
+    .obs-table td { padding:9px 10px; border-bottom:1px solid rgba(0,0,0,0.04); vertical-align:middle; }
+    .obs-table tr:last-child td { border-bottom:none; }
+    .tag { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:500; }
+    .t-nunca     { background:#e3f2fd; color:#1565c0; }
+    .t-aveces    { background:#fff8e1; color:#e65100; }
+    .t-frecuente { background:#fce4ec; color:#880e4f; }
+    .t-siempre   { background:#e8f5e9; color:#1b5e20; }
+    .bar-stack { display:flex; height:8px; border-radius:4px; overflow:hidden; gap:2px; }
+    .bar-seg   { height:100%; border-radius:2px; min-width:3px; }
+
+    footer { padding:14px 36px; font-size:11px; color:var(--muted); text-align:right; border-top:1px solid var(--border); margin-top:12px; }
+
+    @media(max-width:800px) {
+      .metrics,.grid-2,.grid-3 { grid-template-columns:1fr 1fr; padding:8px 16px; }
+      .grid-1 { padding:8px 16px; }
+      .header { padding:18px 16px; flex-wrap:wrap; }
+      .statusbar,.section-title,.api-panel,.banner { padding-left:16px; padding-right:16px; }
+      .api-panel { margin-left:16px; margin-right:16px; }
+      .banner { margin-left:16px; margin-right:16px; }
+      footer { padding:12px 16px; }
     }
-    .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #7fff6e; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-    .status-bar {
-      padding: 10px 32px; background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--muted);
-    }
-    .status-bar span { color: var(--cv1); font-weight: 500; }
-
-    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 32px 0; }
-    .metric-card {
-      background: var(--card); border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 16px 18px;
-      position: relative; overflow: hidden;
-    }
-    .metric-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      border-radius: 14px 14px 0 0;
-    }
-    .mc-orange::before { background: linear-gradient(90deg, var(--c1), var(--c3)); }
-    .mc-pink::before { background: linear-gradient(90deg, var(--cp1), var(--cp3)); }
-    .mc-violet::before { background: linear-gradient(90deg, var(--cv1), var(--cv3)); }
-    .mc-mixed::before { background: linear-gradient(90deg, var(--c1), var(--cp1), var(--cv1)); }
-    .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-    .metric-value { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
-    .metric-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 32px 20px; }
-    .chart-card {
-      background: var(--card); border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 20px;
-    }
-    .chart-card.full { grid-column: 1 / -1; }
-    .chart-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-    .chart-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
-    .chart-wrap { position: relative; width: 100%; }
-
-    .setup-box {
-      background: #fff8fe; border: 1.5px dashed #CE93D8;
-      border-radius: 12px; padding: 20px; margin: 16px 32px 0;
-      font-size: 13px; color: var(--cv1); line-height: 1.6;
-    }
-    .setup-box strong { color: var(--cv1); }
-    .setup-box ol { margin: 8px 0 0 18px; }
-
-    .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
-    .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-
-    .refresh-btn {
-      background: rgba(255,255,255,0.18); color: #fff;
-      border: 1px solid rgba(255,255,255,0.35); border-radius: 8px;
-      padding: 8px 16px; font-size: 12px; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; font-weight: 500;
-      transition: background 0.2s;
-    }
-    .refresh-btn:hover { background: rgba(255,255,255,0.28); }
-
-    footer { padding: 16px 32px; font-size: 11px; color: var(--muted); text-align: right; border-top: 1px solid var(--border); margin-top: 8px; }
-
-    @media (max-width: 768px) {
-      .metrics { grid-template-columns: repeat(2, 1fr); }
-      .charts-grid { grid-template-columns: 1fr; }
-      .chart-card.full { grid-column: 1; }
-      .header { padding: 20px 16px; flex-wrap: wrap; }
-      .metrics { padding: 16px; }
-      .charts-grid { padding: 0 16px 16px; }
-      .setup-box { margin: 16px 16px 0; }
+    @media(max-width:520px) {
+      .metrics { grid-template-columns:1fr; }
+      .grid-2,.grid-3 { grid-template-columns:1fr; }
+      .api-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
-  <div class="logo-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" title="Subir logo PNG">
+  <div class="logo-zone" id="logoZone" onclick="document.getElementById('logoInput').click()">
     <span>+ Logo PNG</span>
   </div>
   <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml" style="display:none">
   <div class="header-text">
-    <h1 id="dashTitle">Dashboard de encuesta</h1>
-    <p id="dashSubtitle">Resultados en tiempo real · Google Forms</p>
+    <h1>Encuesta a docentes</h1>
+    <p>Convivencia, género y herramientas institucionales · 2026</p>
   </div>
   <div class="header-right">
-    <div class="header-badge"><span class="dot-live"></span>En vivo</div>
-    <button class="refresh-btn" onclick="loadData()">↻ Actualizar</button>
+    <div class="badge-live"><span class="dot"></span>En vivo</div>
+    <button class="btn-refresh" onclick="loadData()">↻ Actualizar</button>
   </div>
 </div>
 
-<div class="status-bar">
-  Última actualización: <span id="lastUpdate">—</span> &nbsp;·&nbsp; Fuente: Google Sheets
+<!-- STATUSBAR -->
+<div class="statusbar">
+  <span>Última actualización: <strong id="lastUpdate">—</strong></span>
+  <span id="dataSource">Datos estáticos del CSV</span>
 </div>
 
-<div class="setup-box" id="setupBox" style="display:none;">
-  <strong>Paso pendiente para datos en tiempo real:</strong>
-  <ol>
-    <li>En Google Sheets: <strong>Archivo → Compartir → Publicar en la web</strong></li>
-    <li>Elegí tu hoja y formato <strong>CSV</strong>, luego hacé clic en <strong>Publicar</strong></li>
-    <li>El dashboard se actualizará automáticamente cada 60 segundos</li>
-  </ol>
-  <p style="margin-top:8px;">Mientras tanto se muestran datos de muestra.</p>
+<!-- INFO BANNER -->
+<div class="banner info" id="infoBanner">
+  Configurá la conexión a Google Sheets para activar actualizaciones automáticas. Los datos actuales son del CSV cargado.
 </div>
 
+<!-- API PANEL -->
+<div class="api-panel">
+  <div class="api-panel-header" id="apiToggle" onclick="toggleApiPanel()">
+    <span>🔗 Conexión en tiempo real con Google Sheets</span>
+    <span class="arrow" id="apiArrow">▼</span>
+  </div>
+  <div class="api-body" id="apiBody">
+    <div class="api-hint">
+      <strong>Sin API Key.</strong> El dashboard lee tu hoja directamente mediante la URL pública de exportación CSV. No necesitás Google Cloud ni ninguna clave.<br><br>
+      Solo asegurate de que en Netlify → <strong>Site configuration → Environment variables</strong> estén configuradas:
+      <ol style="margin-top:6px;">
+        <li><strong>SHEET_ID</strong> → <code>1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88</code></li>
+        <li><strong>SHEET_GID</strong> → <code>0</code> (es el número al final de la URL de tu hoja)</li>
+      </ol>
+      Después hacé redeploy y clic en <strong>Activar tiempo real</strong>.
+    </div>
+    <div class="api-actions">
+      <button class="btn-connect" onclick="connectSheets()">Activar tiempo real</button>
+      <div>
+        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;">Intervalo (segundos)</label>
+        <input type="number" id="refreshInterval" value="60" min="15" max="3600" style="width:90px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;">
+      </div>
+      <span class="api-status" id="apiStatus">Sin conectar</span>
+    </div>
+  </div>
+</div>
+
+<!-- METRICS -->
 <div class="metrics">
-  <div class="metric-card mc-orange">
-    <div class="metric-label">Total respuestas</div>
-    <div class="metric-value" id="totalResp">—</div>
-    <div class="metric-sub" id="lastResp">Cargando...</div>
+  <div class="mcard blue">
+    <div class="mlabel">Total docentes</div>
+    <div class="mvalue" id="m-total">7</div>
+    <div class="msub">respuestas recibidas</div>
   </div>
-  <div class="metric-card mc-pink">
-    <div class="metric-label">Preguntas</div>
-    <div class="metric-value" id="totalQ">—</div>
-    <div class="metric-sub">Campos en la encuesta</div>
+  <div class="mcard red">
+    <div class="mlabel">Mayor desafío</div>
+    <div class="mvalue" style="font-size:15px;margin-top:5px;" id="m-desafio">Falta de límites</div>
+    <div class="msub" id="m-desafio-pct">100% lo mencionó</div>
   </div>
-  <div class="metric-card mc-violet">
-    <div class="metric-label">Respuesta más común</div>
-    <div class="metric-value" style="font-size:16px;margin-top:4px;" id="topAnswer">—</div>
-    <div class="metric-sub" id="topAnswerQ">—</div>
+  <div class="mcard green">
+    <div class="mlabel">Protocolo institucional</div>
+    <div class="mvalue" id="m-proto">86%</div>
+    <div class="msub">lo conoce y aplica</div>
   </div>
-  <div class="metric-card mc-mixed">
-    <div class="metric-label">Completadas hoy</div>
-    <div class="metric-value" id="todayResp">—</div>
-    <div class="metric-sub" id="todaySub">—</div>
+  <div class="mcard orange">
+    <div class="mlabel">Capacitación en abuso</div>
+    <div class="mvalue" id="m-cap">57%</div>
+    <div class="msub">necesita más herramientas</div>
   </div>
 </div>
 
-<div class="charts-grid" id="chartsContainer">
-  <div class="chart-card full" style="text-align:center;padding:40px;color:var(--muted);">Conectando con Google Sheets...</div>
+<!-- SECCIÓN 1 -->
+<div class="section-title"><span class="bar" style="background:var(--red)"></span>Convivencia y exclusión</div>
+<div class="grid-2">
+  <div class="ccard">
+    <div class="ctitle">¿Observás conductas de exclusión deliberada?</div>
+    <div class="csub">n = 7 docentes</div>
+    <div class="legend-row" id="leg-exclusion"></div>
+    <div class="cwrap" style="height:190px"><canvas id="c-exclusion"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">¿Existen apodos o burlas físicas?</div>
+    <div class="csub">n = 7 docentes</div>
+    <div class="legend-row" id="leg-burlas"></div>
+    <div class="cwrap" style="height:190px"><canvas id="c-burlas"></canvas></div>
+  </div>
+</div>
+<div class="grid-2" style="padding-top:0">
+  <div class="ccard">
+    <div class="ctitle">¿Notás temor o inhibición ante ciertos pares?</div>
+    <div class="csub">n = 7 docentes</div>
+    <div class="legend-row" id="leg-temor"></div>
+    <div class="cwrap" style="height:190px"><canvas id="c-temor"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">¿Juegos que derivan en agresiones físicas?</div>
+    <div class="csub">n = 7 docentes</div>
+    <div class="legend-row" id="leg-agresiones"></div>
+    <div class="cwrap" style="height:190px"><canvas id="c-agresiones"></canvas></div>
+  </div>
 </div>
 
-<footer>Dashboard generado con Claude · ID de hoja: 1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88</footer>
+<!-- SECCIÓN 2 -->
+<div class="section-title"><span class="bar" style="background:var(--blue)"></span>Perspectiva de género</div>
+<div class="grid-2">
+  <div class="ccard">
+    <div class="ctitle">¿Existen juegos "de nenas" y "de nenes"?</div>
+    <div class="csub">Percepción sobre roles de género en el juego</div>
+    <div class="legend-row" id="leg-juegos"></div>
+    <div class="cwrap" style="height:200px"><canvas id="c-juegos"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">Ante conflicto físico, ¿la reacción varía según género?</div>
+    <div class="csub">Autopercepción de intervención docente</div>
+    <div class="legend-row" id="leg-conflicto"></div>
+    <div class="cwrap" style="height:200px"><canvas id="c-conflicto"></canvas></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 3 -->
+<div class="section-title"><span class="bar" style="background:var(--teal)"></span>Observaciones en sala</div>
+<div class="grid-1">
+  <div class="ccard">
+    <div class="ctitle">Indicadores observados en el aula</div>
+    <div class="csub">Frecuencia de situaciones registradas por los docentes · n = 7</div>
+    <div class="obs-wrap">
+      <table class="obs-table" id="obsTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- SECCIÓN 4 -->
+<div class="section-title"><span class="bar" style="background:var(--green)"></span>Capacitación y herramientas</div>
+<div class="grid-3">
+  <div class="ccard">
+    <div class="ctitle">¿Te sentís capacitado/a para detectar abuso?</div>
+    <div class="csub">n = 7</div>
+    <div class="legend-row" id="leg-cap"></div>
+    <div class="cwrap" style="height:180px"><canvas id="c-cap"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">¿Conocés el protocolo institucional?</div>
+    <div class="csub">n = 7</div>
+    <div class="legend-row" id="leg-proto"></div>
+    <div class="cwrap" style="height:180px"><canvas id="c-proto"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">¿Qué herramienta de la ONG sería más útil?</div>
+    <div class="csub">Respuesta múltiple · n = 7</div>
+    <div class="legend-row" id="leg-ong"></div>
+    <div class="cwrap" style="height:180px"><canvas id="c-ong"></canvas></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 5 -->
+<div class="section-title"><span class="bar" style="background:var(--purple)"></span>Prácticas docentes</div>
+<div class="grid-2" style="padding-bottom:20px">
+  <div class="ccard">
+    <div class="ctitle">El docente utiliza lenguaje inclusivo o neutro</div>
+    <div class="csub">n = 7</div>
+    <div class="legend-row" id="leg-lenguaje"></div>
+    <div class="cwrap" style="height:180px"><canvas id="c-lenguaje"></canvas></div>
+  </div>
+  <div class="ccard">
+    <div class="ctitle">Mayor desafío en la convivencia de la sala</div>
+    <div class="csub">Respuesta múltiple · n = 7</div>
+    <div class="legend-row" id="leg-desafio"></div>
+    <div class="cwrap" style="height:180px"><canvas id="c-desafio"></canvas></div>
+  </div>
+</div>
+
+<footer>Dashboard · Encuesta a Docentes 2026 · Datos protegidos vía Netlify Functions</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
-  const SHEET_ID = '1zp_K5X3Xcl4C7X-hg0UdznYofdoW1A8Q7GP7wE6bx88';
-  const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
-  const COLORS_ORANGE = ['#FF6B35','#FF8C69','#FFB347','#FFCF8A','#FFE5C2'];
-  const COLORS_PINK   = ['#E91E8C','#F06292','#F48FB1','#F8BBD9','#FCE4EC'];
-  const COLORS_VIOLET = ['#7B2D8B','#AB47BC','#CE93D8','#E1BEE7','#F3E5F5'];
+// ── RGB COLOR PALETTES (clearly distinct per section) ─────────────────────
+const PAL = {
+  // Sección 1 - Convivencia: RED / ORANGE / YELLOW / AMBER
+  exclusion:  ['#E53935','#FB8C00','#FDD835','#43A047'],
+  burlas:     ['#E53935','#FB8C00','#FDD835','#43A047'],
+  temor:      ['#FB8C00','#E53935','#FDD835','#43A047'],
+  agresiones: ['#FB8C00','#FDD835','#E53935','#43A047'],
+  // Sección 2 - Género: BLUE / INDIGO / TEAL
+  juegos:     ['#1E88E5','#3949AB','#00897B','#0288D1'],
+  conflicto:  ['#1E88E5','#E53935'],
+  // Sección 4 - Capacitación: GREEN / TEAL / BLUE
+  cap:        ['#43A047','#00897B'],
+  proto:      ['#1E88E5','#FB8C00'],
+  ong:        ['#8E24AA','#D81B60','#3949AB','#00897B'],
+  // Sección 5 - Prácticas: PURPLE / PINK / INDIGO
+  lenguaje:   ['#E53935','#FB8C00','#43A047'],
+  desafio:    ['#E53935','#FB8C00','#3949AB'],
+  // Tabla observaciones
+  obs: { 'Siempre':'#43A047','Frecuentemente':'#FB8C00','A veces':'#1E88E5','Nunca':'#E53935' },
+};
 
-  let chartInstances = [];
+const FREQ_ORDER = ['Siempre','Frecuentemente','A veces','Nunca'];
 
-  document.getElementById('logoInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      const zone = document.getElementById('logoZone');
-      zone.innerHTML = `<img src="${ev.target.result}" alt="logo">`;
-    };
-    reader.readAsDataURL(file);
+// ── STATIC DATA ────────────────────────────────────────────────────────────
+const STATIC = {
+  total: 7,
+  exclusion:  {'A veces':5,'Nunca':2},
+  burlas:     {'Nunca':4,'A veces':3},
+  temor:      {'A veces':5,'Frecuentemente':1,'Nunca':1},
+  agresiones: {'A veces':5,'Frecuentemente':1,'Nunca':1},
+  juegos:     {'No, los intereses están influenciados por la crianza o el entorno.':3,'Sí, por naturaleza prefieren cosas distintas.':3,'No me lo he planteado.':1},
+  conflicto:  {'No, trato a todos por igual.':5,'Sí, suelo intervenir de forma distinta.':2},
+  cap:        {'Necesito más herramientas':4,'Totalmente capacitado/a':3},
+  proto:      {'Lo conozco y sé aplicarlo':6,'Lo conozco vagamente':1},
+  ong:        {'Charlas de sensibilización para padres':5,'Recursos didácticos para trabajar en la sala':2,'Talleres de oralidad para que los niños expresen sus emociones':2},
+  lenguaje:   {'Nunca':3,'A veces':2,'Siempre':1},
+  desafio:    {'Falta de límites':7,'Conductas violentas entre niños':1,'Niños tímidos o introvertidos':1},
+  obs: {
+    'Los niños/as se agrupan por género para jugar':        {'A veces':6,'Siempre':1},
+    'Se escuchan frases de exclusión':                       {'Nunca':4,'A veces':3},
+    'Hay niños/as que permanecen solos/as':                  {'A veces':5,'Nunca':2},
+    'Los varones ocupan mayor espacio físico':               {'Nunca':4,'A veces':3},
+    'Los sectores de juego están divididos por género':      {'Nunca':5,'A veces':2},
+    'Los varones eligen juegos de cuidado o domésticos':     {'A veces':7},
+    'Las niñas participan en juegos de fuerza o liderazgo':  {'A veces':5,'Siempre':2},
+    'Se permite expresar tristeza sin ser juzgados':         {'Siempre':4,'A veces':2},
+    'Se refuerzan estereotipos':                             {'Siempre':4,'A veces':2},
+    'El adulto interviene ante agresiones':                  {'Siempre':7},
+    'Se fomenta el diálogo para resolver conflictos':        {'Siempre':7},
+  }
+};
+
+let charts = {};
+let liveInterval = null;
+
+// ── LOGO UPLOAD ────────────────────────────────────────────────────────────
+document.getElementById('logoInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => { document.getElementById('logoZone').innerHTML = `<img src="${ev.target.result}" alt="logo">`; };
+  r.readAsDataURL(f);
+});
+
+function toggleApiPanel() {
+  const body   = document.getElementById('apiBody');
+  const arrow  = document.getElementById('apiArrow');
+  const toggle = document.getElementById('apiToggle');
+  const open   = body.classList.toggle('visible');
+  toggle.classList.toggle('open', open);
+  arrow.textContent = open ? '▲' : '▼';
+}
+
+function now() {
+  return new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+function setBanner(msg, type) {
+  const b = document.getElementById('infoBanner');
+  b.textContent = msg;
+  b.className = 'banner ' + type;
+}
+
+// ── CHART BUILDERS ─────────────────────────────────────────────────────────
+function makeLegend(id, labels, colors) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = labels.map((l,i) =>
+    `<span class="leg"><span class="leg-sq" style="background:${colors[i%colors.length]}"></span>${l.length>32?l.slice(0,30)+'…':l}</span>`
+  ).join('');
+}
+
+function donut(id, legId, data, palette) {
+  const labels = Object.keys(data);
+  const vals   = Object.values(data);
+  const total  = vals.reduce((a,b)=>a+b,0);
+  makeLegend(legId, labels.map((l,i)=>`${l} (${Math.round(vals[i]/total*100)}%)`), palette);
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'doughnut',
+    data: { labels, datasets:[{ data:vals, backgroundColor:palette.slice(0,vals.length), borderWidth:3, borderColor:'#fff', hoverOffset:6 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw/total*100)}%)`}} }
+    }
   });
+}
 
-  function now() {
-    return new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+function hbar(id, legId, data, palette) {
+  const raw    = Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const labels = raw.map(([k]) => k.length>34 ? k.slice(0,32)+'…' : k);
+  const vals   = raw.map(([,v]) => v);
+  makeLegend(legId, labels, palette);
+  if (charts[id]) charts[id].destroy();
+  const bgColors = vals.map((_,i) => palette[i % palette.length]);
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels, datasets:[{ data:vals, backgroundColor:bgColors, borderRadius:6, borderSkipped:false }] },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{color:'rgba(0,0,0,0.05)'}, ticks:{stepSize:1} }, y:{ grid:{display:false} } }
+    }
+  });
+}
+
+function buildObsTable(obs) {
+  const total = 7;
+  const C = PAL.obs;
+  let html = `<thead><tr>
+    <th>Indicador</th>
+    <th style="text-align:center"><span style="color:${C['Siempre']}">Siempre</span></th>
+    <th style="text-align:center"><span style="color:${C['Frecuentemente']}">Frecuentemente</span></th>
+    <th style="text-align:center"><span style="color:${C['A veces']}">A veces</span></th>
+    <th style="text-align:center"><span style="color:${C['Nunca']}">Nunca</span></th>
+    <th style="min-width:120px">Distribución</th>
+  </tr></thead><tbody>`;
+  for (const [label, freq] of Object.entries(obs)) {
+    const cells = FREQ_ORDER.map(f => {
+      const v = freq[f]||0;
+      const cls = {Siempre:'t-siempre',Frecuentemente:'t-frecuente','A veces':'t-aveces',Nunca:'t-nunca'}[f];
+      return `<td style="text-align:center">${v>0?`<span class="tag ${cls}">${v}</span>`:'—'}</td>`;
+    }).join('');
+    const segs = FREQ_ORDER.map(f => {
+      const v = freq[f]||0;
+      const w = Math.round(v/total*100);
+      return w>0 ? `<div class="bar-seg" style="background:${C[f]};width:${w}%;flex:${v}"></div>` : '';
+    }).join('');
+    html += `<tr><td style="font-size:12px;max-width:200px;line-height:1.4">${label}</td>${cells}<td><div class="bar-stack">${segs}</div></td></tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('obsTable').innerHTML = html;
+}
+
+// ── UPDATE METRICS ─────────────────────────────────────────────────────────
+function updateMetrics(d) {
+  document.getElementById('m-total').textContent = d.total;
+  const top = Object.entries(d.desafio).sort((a,b)=>b[1]-a[1])[0];
+  if (top) {
+    document.getElementById('m-desafio').textContent = top[0].length>20 ? top[0].slice(0,18)+'…' : top[0];
+    document.getElementById('m-desafio-pct').textContent = Math.round(top[1]/d.total*100)+'% lo mencionó';
+  }
+  const protoOk = d.proto['Lo conozco y sé aplicarlo']||0;
+  document.getElementById('m-proto').textContent = Math.round(protoOk/d.total*100)+'%';
+  const capNeeds = d.cap['Necesito más herramientas']||0;
+  document.getElementById('m-cap').textContent = Math.round(capNeeds/d.total*100)+'%';
+}
+
+// ── RENDER ALL ─────────────────────────────────────────────────────────────
+function renderAll(d) {
+  updateMetrics(d);
+  donut('c-exclusion','leg-exclusion', d.exclusion,  PAL.exclusion);
+  donut('c-burlas',   'leg-burlas',    d.burlas,     PAL.burlas);
+  donut('c-temor',    'leg-temor',     d.temor,      PAL.temor);
+  donut('c-agresiones','leg-agresiones',d.agresiones,PAL.agresiones);
+  hbar ('c-juegos',   'leg-juegos',    d.juegos,     PAL.juegos);
+  donut('c-conflicto','leg-conflicto', d.conflicto,  PAL.conflicto);
+  donut('c-cap',      'leg-cap',       d.cap,        PAL.cap);
+  donut('c-proto',    'leg-proto',     d.proto,      PAL.proto);
+  hbar ('c-ong',      'leg-ong',       d.ong,        PAL.ong);
+  donut('c-lenguaje', 'leg-lenguaje',  d.lenguaje,   PAL.lenguaje);
+  hbar ('c-desafio',  'leg-desafio',   d.desafio,    PAL.desafio);
+  buildObsTable(d.obs);
+}
+
+// ── CONNECT VIA NETLIFY FUNCTION (CSV proxy) ──────────────────────────────
+async function connectSheets() {
+  const interval = parseInt(document.getElementById('refreshInterval').value) || 60;
+  const statusEl = document.getElementById('apiStatus');
+  statusEl.textContent = 'Conectando...'; statusEl.className = 'api-status';
+  const ok = await fetchFromFunction();
+  if (ok) {
+    statusEl.textContent = `✓ Conectado · cada ${interval}s`; statusEl.className = 'api-status ok';
+    document.getElementById('dataSource').textContent = 'Google Sheets · tiempo real';
+    setBanner('Conectado a Google Sheets. El dashboard se actualiza automáticamente.', 'ok');
+    if (liveInterval) clearInterval(liveInterval);
+    liveInterval = setInterval(fetchFromFunction, interval * 1000);
+  } else {
+    statusEl.textContent = '✗ Sin conexión. Verificá que la hoja sea pública y que hayas hecho redeploy en Netlify.';
+    statusEl.className = 'api-status err';
+    setBanner('No se pudo conectar. Asegurate de que la hoja esté publicada públicamente y que las variables SHEET_ID y SHEET_GID estén en Netlify.', 'err');
+  }
+}
+
+async function fetchFromFunction() {
+  try {
+    const res = await fetch('/.netlify/functions/sheets');
+    if (!res.ok) return false;
+    const csv = await res.text();
+    if (!csv || csv.trim().startsWith('{')) return false; // error JSON
+    const parsed = parseCSV(csv);
+    if (!parsed) return false;
+    renderAll(parsed);
+    document.getElementById('lastUpdate').textContent = now();
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── CSV PARSER ─────────────────────────────────────────────────────────────
+function parseCSV(csv) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return null;
+
+  // Parse a CSV line respecting quoted fields
+  function parseLine(line) {
+    const result = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    result.push(cur.trim());
+    return result;
   }
 
-  function isDateCol(col) {
-    return col.toLowerCase().includes('marca') || col.toLowerCase().includes('timestamp') || col.toLowerCase().includes('fecha');
-  }
+  const headers = parseLine(lines[0]).map(h => h.replace(/^"|"$/g,'').trim());
+  const rows = lines.slice(1).map(l => {
+    const vals = parseLine(l);
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,'').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
 
-  function getFreq(arr) {
-    const freq = {};
-    arr.forEach(v => { if (v && v.trim()) freq[v.trim()] = (freq[v.trim()] || 0) + 1; });
-    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
-  }
-
-  function destroyCharts() {
-    chartInstances.forEach(c => c.destroy());
-    chartInstances = [];
-  }
-
-  function buildCharts(headers, rows) {
-    destroyCharts();
-    const container = document.getElementById('chartsContainer');
-    container.innerHTML = '';
-    const dataColumns = headers.filter(h => !isDateCol(h));
-
-    dataColumns.forEach((col, idx) => {
-      const vals = rows.map(r => r[col]).filter(v => v && v.trim());
-      if (!vals.length) return;
-
-      const freq = getFreq(vals);
-      const isNumeric = vals.every(v => !isNaN(parseFloat(v)));
-      const card = document.createElement('div');
-      card.className = 'chart-card';
-      if (dataColumns.length === 1) card.className += ' full';
-
-      const cid = 'chart_' + idx;
-      const palette = idx % 3 === 0 ? COLORS_ORANGE : idx % 3 === 1 ? COLORS_PINK : COLORS_VIOLET;
-
-      if (isNumeric && freq.length > 8) {
-        const nums = vals.map(v => parseFloat(v));
-        const avg = (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(1);
-        const mn = Math.min(...nums);
-        const mx = Math.max(...nums);
-        card.innerHTML = `
-          <div class="chart-title">${col}</div>
-          <div class="chart-sub">Promedio: ${avg} · Mín: ${mn} · Máx: ${mx}</div>
-          <div class="chart-wrap" style="height:220px"><canvas id="${cid}"></canvas></div>`;
-        container.appendChild(card);
-        setTimeout(() => {
-          const buckets = 8;
-          const step = (mx - mn) / buckets || 1;
-          const labels = [];
-          const counts = new Array(buckets).fill(0);
-          for (let i = 0; i < buckets; i++) labels.push((mn + i * step).toFixed(1));
-          nums.forEach(n => {
-            let b = Math.floor((n - mn) / step);
-            if (b >= buckets) b = buckets - 1;
-            counts[b]++;
-          });
-          chartInstances.push(new Chart(document.getElementById(cid), {
-            type: 'bar',
-            data: { labels, datasets: [{ data: counts, backgroundColor: palette[0], borderRadius: 6, borderSkipped: false }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(0,0,0,0.04)' } } } }
-          }));
-        }, 100);
-      } else {
-        const top = freq.slice(0, 8);
-        const labels = top.map(e => e[0].length > 30 ? e[0].slice(0, 28) + '…' : e[0]);
-        const data = top.map(e => e[1]);
-        const total = data.reduce((a, b) => a + b, 0);
-        const isPie = top.length <= 5;
-        const legendHtml = top.map((e, i) => `
-          <span style="display:flex;align-items:center;gap:4px;">
-            <span class="legend-dot" style="background:${palette[i % palette.length]}"></span>
-            ${e[0].length > 20 ? e[0].slice(0, 18) + '…' : e[0]} (${Math.round(e[1] / total * 100)}%)
-          </span>`).join('');
-        card.innerHTML = `
-          <div class="chart-title">${col}</div>
-          <div class="legend-row">${legendHtml}</div>
-          <div class="chart-wrap" style="height:${isPie ? 200 : Math.max(180, top.length * 38)}px"><canvas id="${cid}"></canvas></div>`;
-        container.appendChild(card);
-        setTimeout(() => {
-          const type = isPie ? 'doughnut' : 'bar';
-          const opts = isPie ? {
-            responsive: true, maintainAspectRatio: false, cutout: '60%',
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw / total * 100)}%)` } } }
-          } : {
-            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1 } }, y: { grid: { display: false } } }
-          };
-          const dsConfig = isPie
-            ? { data, backgroundColor: palette.slice(0, data.length), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }
-            : { data, backgroundColor: palette[0], borderRadius: 6, borderSkipped: false, hoverBackgroundColor: palette[1] };
-          chartInstances.push(new Chart(document.getElementById(cid), { type, data: { labels, datasets: [dsConfig] }, options: opts }));
-        }, 100);
-      }
+  function freq(col) {
+    const f = {};
+    rows.forEach(r => {
+      const v = r[col]; if (!v) return;
+      v.split(';').forEach(p => { p=p.trim(); if(p) f[p]=(f[p]||0)+1; });
     });
-
-    const dateCol = headers.find(h => isDateCol(h));
-    if (dateCol && rows.length > 2) {
-      const byDay = {};
-      rows.forEach(r => {
-        const raw = r[dateCol];
-        if (!raw) return;
-        const d = new Date(raw);
-        if (isNaN(d)) return;
-        const key = d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
-        byDay[key] = (byDay[key] || 0) + 1;
-      });
-      const entries = Object.entries(byDay).slice(-14);
-      if (entries.length > 1) {
-        const tcard = document.createElement('div');
-        tcard.className = 'chart-card full';
-        tcard.innerHTML = `
-          <div class="chart-title">Respuestas por día</div>
-          <div class="chart-sub">Últimas ${entries.length} fechas registradas</div>
-          <div class="chart-wrap" style="height:180px"><canvas id="chart_timeline"></canvas></div>`;
-        container.appendChild(tcard);
-        setTimeout(() => {
-          chartInstances.push(new Chart(document.getElementById('chart_timeline'), {
-            type: 'line',
-            data: {
-              labels: entries.map(e => e[0]),
-              datasets: [{ data: entries.map(e => e[1]), borderColor: '#E91E8C', backgroundColor: 'rgba(233,30,140,0.08)', tension: 0.4, fill: true, pointBackgroundColor: '#E91E8C', pointRadius: 4 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1 } } } }
-          }));
-        }, 150);
-      }
-    }
+    return f;
+  }
+  function find(kw) {
+    return headers.find(h => h.toLowerCase().includes(kw.toLowerCase())) || '';
   }
 
-  function updateMetrics(headers, rows) {
-    document.getElementById('totalResp').textContent = rows.length;
-    document.getElementById('totalQ').textContent = headers.filter(h => !isDateCol(h)).length;
-    const dateCol = headers.find(h => isDateCol(h));
-    if (dateCol && rows.length) {
-      const last = rows[rows.length - 1][dateCol];
-      document.getElementById('lastResp').textContent = last ? 'Última: ' + new Date(last).toLocaleDateString('es-AR') : '—';
-      const today = new Date().toDateString();
-      const todayCount = rows.filter(r => new Date(r[dateCol]).toDateString() === today).length;
-      document.getElementById('todayResp').textContent = todayCount;
-      document.getElementById('todaySub').textContent = todayCount > 0 ? 'nuevas hoy' : 'sin respuestas hoy';
-    } else {
-      document.getElementById('lastResp').textContent = '—';
-      document.getElementById('todayResp').textContent = '—';
-      document.getElementById('todaySub').textContent = '—';
+  return {
+    total: rows.length,
+    exclusion:  freq(find('exclusión deliberada')),
+    burlas:     freq(find('apodos o burlas')),
+    temor:      freq(find('temor o inhibición')),
+    agresiones: freq(find('agresiones físicas constantes')),
+    juegos:     freq(find('nenas') || find('juegos')),
+    conflicto:  freq(find('reacción varía')),
+    cap:        freq(find('capacitado')),
+    proto:      freq(find('protocolo')),
+    ong:        freq(find('herramienta')),
+    lenguaje:   freq(find('lenguaje inclusivo')),
+    desafio:    freq(find('mayor desafío')),
+    obs: {
+      'Los niños/as se agrupan por género para jugar':        freq(find('agrupan espontáneamente')),
+      'Se escuchan frases de exclusión':                       freq(find('frases de exclusión')),
+      'Hay niños/as que permanecen solos/as':                  freq(find('sistemáticamente solos')),
+      'Los varones ocupan mayor espacio físico':               freq(find('espacio físico')),
+      'Los sectores de juego están divididos por género':      freq(find('sectores de juego')),
+      'Los varones eligen juegos de cuidado o domésticos':     freq(find('cuidado o domésticos')),
+      'Las niñas participan en juegos de fuerza o liderazgo':  freq(find('fuerza o liderazgo')),
+      'Se permite expresar tristeza sin ser juzgados':         freq(find('tristeza o llanto')),
+      'Se refuerzan estereotipos':                             freq(find('estereotipos')),
+      'El adulto interviene ante agresiones':                  freq(find('interviene rápidamente')),
+      'Se fomenta el diálogo para resolver conflictos':        freq(find('diálogo para resolver')),
     }
-    const dataCols = headers.filter(h => !isDateCol(h));
-    if (dataCols.length) {
-      let best = null, bestCount = 0, bestCol = '';
-      dataCols.forEach(col => {
-        const freq = getFreq(rows.map(r => r[col]));
-        if (freq.length && freq[0][1] > bestCount) { bestCount = freq[0][1]; best = freq[0][0]; bestCol = col; }
-      });
-      if (best) {
-        document.getElementById('topAnswer').textContent = best.length > 18 ? best.slice(0, 16) + '…' : best;
-        document.getElementById('topAnswerQ').textContent = bestCol.length > 30 ? bestCol.slice(0, 28) + '…' : bestCol;
-      }
-    }
-  }
+  };
+}
 
-  function showSampleData() {
-    document.getElementById('setupBox').style.display = 'block';
-    const headers = ['Marca temporal', '¿Cuál es tu edad?', '¿Cómo conociste el producto?', '¿Lo recomendarías?', '¿Con qué frecuencia lo usás?'];
-    const sources = ['Redes sociales', 'Amigos', 'Google', 'Publicidad', 'Otro'];
-    const reco = ['Sí, definitivamente', 'Probablemente sí', 'Tal vez', 'Probablemente no'];
-    const freq = ['Todos los días', 'Varias veces por semana', 'Una vez por semana', 'Ocasionalmente'];
-    const rows = Array.from({ length: 24 }, (_, i) => {
-      const d = new Date(); d.setDate(d.getDate() - Math.floor(Math.random() * 14));
-      return {
-        'Marca temporal': d.toISOString(),
-        '¿Cuál es tu edad?': String(18 + Math.floor(Math.random() * 40)),
-        '¿Cómo conociste el producto?': sources[Math.floor(Math.random() * sources.length)],
-        '¿Lo recomendarías?': reco[Math.floor(Math.random() * reco.length)],
-        '¿Con qué frecuencia lo usás?': freq[Math.floor(Math.random() * freq.length)]
-      };
-    });
-    document.getElementById('dashSubtitle').textContent = 'Datos de muestra · Publicá la hoja para datos reales';
-    updateMetrics(headers, rows);
-    buildCharts(headers, rows);
-    document.getElementById('lastUpdate').textContent = now() + ' (muestra)';
-  }
+// ── INIT ───────────────────────────────────────────────────────────────────
+function loadData() {
+  renderAll(STATIC);
+  document.getElementById('lastUpdate').textContent = now() + ' (CSV estático)';
+}
 
-  async function loadData() {
-    document.getElementById('lastUpdate').textContent = 'actualizando…';
-    try {
-      const resp = await fetch(CSV_URL);
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const text = await resp.text();
-      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-      if (!parsed.data || parsed.data.length === 0) throw new Error('Sin datos');
-      document.getElementById('setupBox').style.display = 'none';
-      document.getElementById('dashSubtitle').textContent = 'Resultados en tiempo real · Google Sheets';
-      updateMetrics(parsed.meta.fields, parsed.data);
-      buildCharts(parsed.meta.fields, parsed.data);
-      document.getElementById('lastUpdate').textContent = now();
-    } catch (e) {
-      showSampleData();
-    }
-  }
-
-  loadData();
-  setInterval(loadData, 60000);
+loadData();
 </script>
 </body>
 </html>
