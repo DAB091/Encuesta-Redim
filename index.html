@@ -49,31 +49,6 @@
     .statusbar { padding:9px 36px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--muted); }
     .statusbar strong { color:var(--violet); }
 
-    /* STATUS BANNER */
-    .banner { margin:14px 36px 0; padding:12px 16px; border-radius:10px; font-size:13px; display:none; }
-    .banner.ok  { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
-    .banner.err { background:#ffebee; color:#c62828; border:1px solid #ef9a9a; }
-    .banner.info{ background:#fdf0ff; color:#7B2D8B; border:1px solid #CE93D8; display:block; }
-
-    /* API PANEL */
-    .api-panel { margin:14px 36px 0; background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-    .api-panel-header { padding:12px 18px; background:linear-gradient(90deg,#fdf0ff,#fff0f8); display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
-    .api-panel-header span { font-size:13px; font-weight:500; color:var(--violet); }
-    .arrow { font-size:11px; color:var(--muted); transition:transform .2s; }
-    .api-panel-header.open .arrow { transform:rotate(180deg); }
-    .api-body { display:none; padding:18px; border-top:1px solid var(--border); }
-    .api-body.visible { display:block; }
-    .api-hint { font-size:12px; color:var(--muted); line-height:1.7; background:#f8f9fc; border-radius:8px; padding:12px 14px; border:1px dashed var(--border); margin-bottom:14px; }
-    .api-hint a { color:var(--violet); }
-    .api-hint ol { margin-left:16px; }
-    .api-hint strong { color:var(--text); }
-    .api-actions { margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .btn-connect { background:linear-gradient(135deg,var(--violet),var(--pink)); color:#fff; border:none; border-radius:8px; padding:9px 22px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:opacity .2s; }
-    .btn-connect:hover { opacity:.9; }
-    .api-status { font-size:12px; color:var(--muted); }
-    .api-status.ok  { color:#2e7d32; }
-    .api-status.err { color:#c62828; }
-
     /* METRICS */
     .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:18px 36px 0; }
     .mcard { background:var(--card); border-radius:14px; border:1px solid var(--border); padding:16px 18px; position:relative; overflow:hidden; }
@@ -123,15 +98,12 @@
       .metrics,.grid-2,.grid-3 { grid-template-columns:1fr 1fr; padding:8px 16px; }
       .grid-1 { padding:8px 16px; }
       .header { padding:18px 16px; flex-wrap:wrap; }
-      .statusbar,.section-title,.api-panel,.banner { padding-left:16px; padding-right:16px; }
-      .api-panel { margin-left:16px; margin-right:16px; }
-      .banner { margin-left:16px; margin-right:16px; }
+      .statusbar,.section-title { padding-left:16px; padding-right:16px; }
       footer { padding:12px 16px; }
     }
     @media(max-width:520px) {
       .metrics { grid-template-columns:1fr; }
       .grid-2,.grid-3 { grid-template-columns:1fr; }
-      .api-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -158,37 +130,7 @@
   <span id="dataSource">Datos estáticos del CSV</span>
 </div>
 
-<!-- INFO BANNER -->
-<div class="banner info" id="infoBanner">
-  Configurá la conexión a Google Sheets para activar actualizaciones automáticas. Los datos actuales son del CSV cargado.
-</div>
 
-<!-- API PANEL -->
-<div class="api-panel">
-  <div class="api-panel-header" id="apiToggle" onclick="toggleApiPanel()">
-    <span>🔗 Conexión en tiempo real con Google Sheets</span>
-    <span class="arrow" id="apiArrow">▼</span>
-  </div>
-  <div class="api-body" id="apiBody">
-    <div class="api-hint">
-      <strong>Sin API Key.</strong> El dashboard lee tu hoja directamente mediante la URL pública de exportación CSV. No necesitás Google Cloud ni ninguna clave.<br><br>
-      Solo asegurate de que en Netlify → <strong>Site configuration → Environment variables</strong> estén configuradas:
-      <ol style="margin-top:6px;">
-        <li><strong>SHEET_ID</strong> → el ID de tu hoja de Google Sheets</li>
-        <li><strong>SHEET_GID</strong> → el número de pestaña (normalmente <code>0</code>)</li>
-      </ol>
-      Después hacé redeploy y clic en <strong>Activar tiempo real</strong>.
-    </div>
-    <div class="api-actions">
-      <button class="btn-connect" onclick="connectSheets()">Activar tiempo real</button>
-      <div>
-        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;">Intervalo (segundos)</label>
-        <input type="number" id="refreshInterval" value="60" min="15" max="3600" style="width:90px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;">
-      </div>
-      <span class="api-status" id="apiStatus">Sin conectar</span>
-    </div>
-  </div>
-</div>
 
 <!-- METRICS -->
 <div class="metrics">
@@ -375,24 +317,11 @@ let charts = {};
 let liveInterval = null;
 
 // ── LOGO UPLOAD ────────────────────────────────────────────────────────────
-function toggleApiPanel() {
-  const body   = document.getElementById('apiBody');
-  const arrow  = document.getElementById('apiArrow');
-  const toggle = document.getElementById('apiToggle');
-  const open   = body.classList.toggle('visible');
-  toggle.classList.toggle('open', open);
-  arrow.textContent = open ? '▲' : '▼';
-}
 
 function now() {
   return new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-function setBanner(msg, type) {
-  const b = document.getElementById('infoBanner');
-  b.textContent = msg;
-  b.className = 'banner ' + type;
-}
 
 // ── CHART BUILDERS ─────────────────────────────────────────────────────────
 function makeLegend(id, labels, colors) {
@@ -495,20 +424,12 @@ function renderAll(d) {
 
 // ── CONNECT VIA NETLIFY FUNCTION (CSV proxy) ──────────────────────────────
 async function connectSheets() {
-  const interval = parseInt(document.getElementById('refreshInterval').value) || 60;
-  const statusEl = document.getElementById('apiStatus');
-  statusEl.textContent = 'Conectando...'; statusEl.className = 'api-status';
+  const interval = 60;
   const ok = await fetchFromFunction();
   if (ok) {
-    statusEl.textContent = `✓ Conectado · cada ${interval}s`; statusEl.className = 'api-status ok';
     document.getElementById('dataSource').textContent = 'Google Sheets · tiempo real';
-    setBanner('Conectado a Google Sheets. El dashboard se actualiza automáticamente.', 'ok');
     if (liveInterval) clearInterval(liveInterval);
     liveInterval = setInterval(fetchFromFunction, interval * 1000);
-  } else {
-    statusEl.textContent = '✗ Sin conexión. Verificá que la hoja sea pública y que hayas hecho redeploy en Netlify.';
-    statusEl.className = 'api-status err';
-    setBanner('No se pudo conectar. Verificá que las variables de entorno estén configuradas en Netlify y que hayas hecho redeploy.', 'err');
   }
 }
 
@@ -601,6 +522,7 @@ function loadData() {
 }
 
 loadData();
+connectSheets();
 </script>
 </body>
 </html>
